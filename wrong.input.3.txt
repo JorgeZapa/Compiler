@@ -1,0 +1,19 @@
+
+int i;
+double f;
+double e;
+
+struct  {
+  int a;
+} a;
+
+void main() {
+  write f && 3; // * Error 1
+  write a >= 3; // * Error 2
+  while (f)     // * Error 3
+    if (f)      // * Error 4
+      write !f;   // * Error 5
+      
+   
+}
+

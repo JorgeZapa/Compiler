@@ -1,0 +1,2613 @@
+   0  $accept : program $end
+
+   1  program : body VOID MAIN '(' ')' '{' varDefinitionOP statementOP '}'
+
+   2  body : body funDefinition
+   3       | body varDefinition
+   4       |
+
+   5  funDefinition : type ID '(' parameterOP ')' '{' varDefinitionOP statementOP '}'
+   6                | VOID ID '(' parameterOP ')' '{' varDefinitionOP statementOP '}'
+
+   7  statementOP : statementS
+   8              |
+
+   9  statementS : statementS statement
+  10             | statement
+
+  11  statement : READ expressionS ';'
+  12            | WRITE expressionS ';'
+  13            | expression '=' expression ';'
+  14            | ID '(' argumentOP ')' ';'
+  15            | WHILE '(' expression ')' complexStatement
+  16            | ifStatement
+  17            | RETURN expression ';'
+
+  18  ifStatement : IF '(' expression ')' complexStatement else
+
+  19  else : ELSE complexStatement
+  20       |
+
+  21  complexStatement : '{' statementOP '}'
+  22                   | statement
+
+  23  expression : expression '+' expression
+  24             | expression '-' expression
+  25             | expression '*' expression
+  26             | expression '/' expression
+  27             | expression '%' expression
+  28             | '-' expression
+  29             | '(' expression ')'
+  30             | expression '>' expression
+  31             | expression '<' expression
+  32             | expression LESS_EQUAL expression
+  33             | expression GREATER_EQUAL expression
+  34             | expression EQUAL expression
+  35             | expression NOT_EQUAL expression
+  36             | expression AND expression
+  37             | expression OR expression
+  38             | ID '(' argumentOP ')'
+  39             | '!' expression
+  40             | '(' type ')' expression
+  41             | expression '.' ID
+  42             | expression '[' expression ']'
+  43             | ID
+  44             | INT_CONSTANT
+  45             | REAL_CONSTANT
+  46             | CHAR_CONSTANT
+
+  47  expressionS : expressionS ',' expression
+  48              | expression
+
+  49  expressionOP : expressionS
+  50               |
+
+  51  varDefinition : type IDList ';'
+
+  52  IDList : IDList ',' ID
+  53         | ID
+
+  54  varDefinitionS : varDefinitionS varDefinition
+  55                 | varDefinition
+
+  56  varDefinitionOP : varDefinitionS
+  57                  |
+
+  58  argumentS : argumentS ',' expression
+  59            | expression
+
+  60  argumentOP : argumentS
+  61             |
+
+  62  param : type ID
+
+  63  parameterS : parameterS ',' param
+  64             | param
+
+  65  parameterOP : parameterS
+  66              |
+
+  67  campo : type IDList ';'
+
+  68  campoS : campoS campo
+  69         | campo
+
+  70  type : INT
+  71       | CHAR
+  72       | DOUBLE
+  73       | type '[' INT_CONSTANT ']'
+  74       | STRUCT '{' campoS '}'
+
+state 0
+	$accept : . program $end  (0)
+	body : .  (4)
+
+	.  reduce 4
+
+	program  goto 1
+	body  goto 2
+
+
+state 1
+	$accept : program . $end  (0)
+
+	$end  accept
+
+
+state 2
+	program : body . VOID MAIN '(' ')' '{' varDefinitionOP statementOP '}'  (1)
+	body : body . funDefinition  (2)
+	body : body . varDefinition  (3)
+
+	INT  shift 3
+	CHAR  shift 4
+	DOUBLE  shift 5
+	STRUCT  shift 6
+	VOID  shift 7
+	.  error
+
+	funDefinition  goto 8
+	varDefinition  goto 9
+	type  goto 10
+
+
+state 3
+	type : INT .  (70)
+
+	.  reduce 70
+
+
+state 4
+	type : CHAR .  (71)
+
+	.  reduce 71
+
+
+state 5
+	type : DOUBLE .  (72)
+
+	.  reduce 72
+
+
+state 6
+	type : STRUCT . '{' campoS '}'  (74)
+
+	'{'  shift 11
+	.  error
+
+
+state 7
+	program : body VOID . MAIN '(' ')' '{' varDefinitionOP statementOP '}'  (1)
+	funDefinition : VOID . ID '(' parameterOP ')' '{' varDefinitionOP statementOP '}'  (6)
+
+	MAIN  shift 12
+	ID  shift 13
+	.  error
+
+
+state 8
+	body : body funDefinition .  (2)
+
+	.  reduce 2
+
+
+state 9
+	body : body varDefinition .  (3)
+
+	.  reduce 3
+
+
+state 10
+	funDefinition : type . ID '(' parameterOP ')' '{' varDefinitionOP statementOP '}'  (5)
+	varDefinition : type . IDList ';'  (51)
+	type : type . '[' INT_CONSTANT ']'  (73)
+
+	ID  shift 14
+	'['  shift 15
+	.  error
+
+	IDList  goto 16
+
+
+state 11
+	type : STRUCT '{' . campoS '}'  (74)
+
+	INT  shift 3
+	CHAR  shift 4
+	DOUBLE  shift 5
+	STRUCT  shift 6
+	.  error
+
+	type  goto 17
+	campo  goto 18
+	campoS  goto 19
+
+
+state 12
+	program : body VOID MAIN . '(' ')' '{' varDefinitionOP statementOP '}'  (1)
+
+	'('  shift 20
+	.  error
+
+
+state 13
+	funDefinition : VOID ID . '(' parameterOP ')' '{' varDefinitionOP statementOP '}'  (6)
+
+	'('  shift 21
+	.  error
+
+
+state 14
+	funDefinition : type ID . '(' parameterOP ')' '{' varDefinitionOP statementOP '}'  (5)
+	IDList : ID .  (53)
+
+	'('  shift 22
+	';'  reduce 53
+	','  reduce 53
+
+
+state 15
+	type : type '[' . INT_CONSTANT ']'  (73)
+
+	INT_CONSTANT  shift 23
+	.  error
+
+
+state 16
+	varDefinition : type IDList . ';'  (51)
+	IDList : IDList . ',' ID  (52)
+
+	';'  shift 24
+	','  shift 25
+	.  error
+
+
+state 17
+	campo : type . IDList ';'  (67)
+	type : type . '[' INT_CONSTANT ']'  (73)
+
+	ID  shift 26
+	'['  shift 15
+	.  error
+
+	IDList  goto 27
+
+
+state 18
+	campoS : campo .  (69)
+
+	.  reduce 69
+
+
+state 19
+	campoS : campoS . campo  (68)
+	type : STRUCT '{' campoS . '}'  (74)
+
+	INT  shift 3
+	CHAR  shift 4
+	DOUBLE  shift 5
+	STRUCT  shift 6
+	'}'  shift 28
+	.  error
+
+	type  goto 17
+	campo  goto 29
+
+
+state 20
+	program : body VOID MAIN '(' . ')' '{' varDefinitionOP statementOP '}'  (1)
+
+	')'  shift 30
+	.  error
+
+
+state 21
+	funDefinition : VOID ID '(' . parameterOP ')' '{' varDefinitionOP statementOP '}'  (6)
+	parameterOP : .  (66)
+
+	INT  shift 3
+	CHAR  shift 4
+	DOUBLE  shift 5
+	STRUCT  shift 6
+	')'  reduce 66
+
+	type  goto 31
+	parameterOP  goto 32
+	param  goto 33
+	parameterS  goto 34
+
+
+state 22
+	funDefinition : type ID '(' . parameterOP ')' '{' varDefinitionOP statementOP '}'  (5)
+	parameterOP : .  (66)
+
+	INT  shift 3
+	CHAR  shift 4
+	DOUBLE  shift 5
+	STRUCT  shift 6
+	')'  reduce 66
+
+	type  goto 31
+	parameterOP  goto 35
+	param  goto 33
+	parameterS  goto 34
+
+
+state 23
+	type : type '[' INT_CONSTANT . ']'  (73)
+
+	']'  shift 36
+	.  error
+
+
+state 24
+	varDefinition : type IDList ';' .  (51)
+
+	.  reduce 51
+
+
+state 25
+	IDList : IDList ',' . ID  (52)
+
+	ID  shift 37
+	.  error
+
+
+state 26
+	IDList : ID .  (53)
+
+	.  reduce 53
+
+
+state 27
+	IDList : IDList . ',' ID  (52)
+	campo : type IDList . ';'  (67)
+
+	';'  shift 38
+	','  shift 25
+	.  error
+
+
+state 28
+	type : STRUCT '{' campoS '}' .  (74)
+
+	.  reduce 74
+
+
+state 29
+	campoS : campoS campo .  (68)
+
+	.  reduce 68
+
+
+state 30
+	program : body VOID MAIN '(' ')' . '{' varDefinitionOP statementOP '}'  (1)
+
+	'{'  shift 39
+	.  error
+
+
+state 31
+	param : type . ID  (62)
+	type : type . '[' INT_CONSTANT ']'  (73)
+
+	ID  shift 40
+	'['  shift 15
+	.  error
+
+
+state 32
+	funDefinition : VOID ID '(' parameterOP . ')' '{' varDefinitionOP statementOP '}'  (6)
+
+	')'  shift 41
+	.  error
+
+
+state 33
+	parameterS : param .  (64)
+
+	.  reduce 64
+
+
+state 34
+	parameterS : parameterS . ',' param  (63)
+	parameterOP : parameterS .  (65)
+
+	','  shift 42
+	')'  reduce 65
+
+
+state 35
+	funDefinition : type ID '(' parameterOP . ')' '{' varDefinitionOP statementOP '}'  (5)
+
+	')'  shift 43
+	.  error
+
+
+state 36
+	type : type '[' INT_CONSTANT ']' .  (73)
+
+	.  reduce 73
+
+
+state 37
+	IDList : IDList ',' ID .  (52)
+
+	.  reduce 52
+
+
+state 38
+	campo : type IDList ';' .  (67)
+
+	.  reduce 67
+
+
+state 39
+	program : body VOID MAIN '(' ')' '{' . varDefinitionOP statementOP '}'  (1)
+	varDefinitionOP : .  (57)
+
+	INT  shift 3
+	CHAR  shift 4
+	DOUBLE  shift 5
+	STRUCT  shift 6
+	INT_CONSTANT  reduce 57
+	CHAR_CONSTANT  reduce 57
+	REAL_CONSTANT  reduce 57
+	WHILE  reduce 57
+	RETURN  reduce 57
+	ID  reduce 57
+	IF  reduce 57
+	READ  reduce 57
+	WRITE  reduce 57
+	'-'  reduce 57
+	'('  reduce 57
+	'}'  reduce 57
+	'!'  reduce 57
+
+	varDefinitionOP  goto 44
+	varDefinition  goto 45
+	type  goto 46
+	varDefinitionS  goto 47
+
+
+state 40
+	param : type ID .  (62)
+
+	.  reduce 62
+
+
+state 41
+	funDefinition : VOID ID '(' parameterOP ')' . '{' varDefinitionOP statementOP '}'  (6)
+
+	'{'  shift 48
+	.  error
+
+
+state 42
+	parameterS : parameterS ',' . param  (63)
+
+	INT  shift 3
+	CHAR  shift 4
+	DOUBLE  shift 5
+	STRUCT  shift 6
+	.  error
+
+	type  goto 31
+	param  goto 49
+
+
+state 43
+	funDefinition : type ID '(' parameterOP ')' . '{' varDefinitionOP statementOP '}'  (5)
+
+	'{'  shift 50
+	.  error
+
+
+state 44
+	program : body VOID MAIN '(' ')' '{' varDefinitionOP . statementOP '}'  (1)
+	statementOP : .  (8)
+
+	INT_CONSTANT  shift 51
+	CHAR_CONSTANT  shift 52
+	REAL_CONSTANT  shift 53
+	WHILE  shift 54
+	RETURN  shift 55
+	ID  shift 56
+	IF  shift 57
+	READ  shift 58
+	WRITE  shift 59
+	'-'  shift 60
+	'('  shift 61
+	'!'  shift 62
+	'}'  reduce 8
+
+	statementOP  goto 63
+	statementS  goto 64
+	statement  goto 65
+	expression  goto 66
+	ifStatement  goto 67
+
+
+state 45
+	varDefinitionS : varDefinition .  (55)
+
+	.  reduce 55
+
+
+state 46
+	varDefinition : type . IDList ';'  (51)
+	type : type . '[' INT_CONSTANT ']'  (73)
+
+	ID  shift 26
+	'['  shift 15
+	.  error
+
+	IDList  goto 16
+
+
+state 47
+	varDefinitionS : varDefinitionS . varDefinition  (54)
+	varDefinitionOP : varDefinitionS .  (56)
+
+	INT  shift 3
+	CHAR  shift 4
+	DOUBLE  shift 5
+	STRUCT  shift 6
+	INT_CONSTANT  reduce 56
+	CHAR_CONSTANT  reduce 56
+	REAL_CONSTANT  reduce 56
+	WHILE  reduce 56
+	RETURN  reduce 56
+	ID  reduce 56
+	IF  reduce 56
+	READ  reduce 56
+	WRITE  reduce 56
+	'-'  reduce 56
+	'('  reduce 56
+	'}'  reduce 56
+	'!'  reduce 56
+
+	varDefinition  goto 68
+	type  goto 46
+
+
+state 48
+	funDefinition : VOID ID '(' parameterOP ')' '{' . varDefinitionOP statementOP '}'  (6)
+	varDefinitionOP : .  (57)
+
+	INT  shift 3
+	CHAR  shift 4
+	DOUBLE  shift 5
+	STRUCT  shift 6
+	INT_CONSTANT  reduce 57
+	CHAR_CONSTANT  reduce 57
+	REAL_CONSTANT  reduce 57
+	WHILE  reduce 57
+	RETURN  reduce 57
+	ID  reduce 57
+	IF  reduce 57
+	READ  reduce 57
+	WRITE  reduce 57
+	'-'  reduce 57
+	'('  reduce 57
+	'}'  reduce 57
+	'!'  reduce 57
+
+	varDefinitionOP  goto 69
+	varDefinition  goto 45
+	type  goto 46
+	varDefinitionS  goto 47
+
+
+state 49
+	parameterS : parameterS ',' param .  (63)
+
+	.  reduce 63
+
+
+state 50
+	funDefinition : type ID '(' parameterOP ')' '{' . varDefinitionOP statementOP '}'  (5)
+	varDefinitionOP : .  (57)
+
+	INT  shift 3
+	CHAR  shift 4
+	DOUBLE  shift 5
+	STRUCT  shift 6
+	INT_CONSTANT  reduce 57
+	CHAR_CONSTANT  reduce 57
+	REAL_CONSTANT  reduce 57
+	WHILE  reduce 57
+	RETURN  reduce 57
+	ID  reduce 57
+	IF  reduce 57
+	READ  reduce 57
+	WRITE  reduce 57
+	'-'  reduce 57
+	'('  reduce 57
+	'}'  reduce 57
+	'!'  reduce 57
+
+	varDefinitionOP  goto 70
+	varDefinition  goto 45
+	type  goto 46
+	varDefinitionS  goto 47
+
+
+state 51
+	expression : INT_CONSTANT .  (44)
+
+	.  reduce 44
+
+
+state 52
+	expression : CHAR_CONSTANT .  (46)
+
+	.  reduce 46
+
+
+state 53
+	expression : REAL_CONSTANT .  (45)
+
+	.  reduce 45
+
+
+state 54
+	statement : WHILE . '(' expression ')' complexStatement  (15)
+
+	'('  shift 71
+	.  error
+
+
+state 55
+	statement : RETURN . expression ';'  (17)
+
+	INT_CONSTANT  shift 51
+	CHAR_CONSTANT  shift 52
+	REAL_CONSTANT  shift 53
+	ID  shift 72
+	'-'  shift 60
+	'('  shift 61
+	'!'  shift 62
+	.  error
+
+	expression  goto 73
+
+
+state 56
+	statement : ID . '(' argumentOP ')' ';'  (14)
+	expression : ID . '(' argumentOP ')'  (38)
+	expression : ID .  (43)
+
+	'('  shift 74
+	AND  reduce 43
+	OR  reduce 43
+	EQUAL  reduce 43
+	NOT_EQUAL  reduce 43
+	LESS_EQUAL  reduce 43
+	GREATER_EQUAL  reduce 43
+	'='  reduce 43
+	'<'  reduce 43
+	'>'  reduce 43
+	'+'  reduce 43
+	'-'  reduce 43
+	'*'  reduce 43
+	'/'  reduce 43
+	'%'  reduce 43
+	'['  reduce 43
+	'.'  reduce 43
+
+
+state 57
+	ifStatement : IF . '(' expression ')' complexStatement else  (18)
+
+	'('  shift 75
+	.  error
+
+
+state 58
+	statement : READ . expressionS ';'  (11)
+
+	INT_CONSTANT  shift 51
+	CHAR_CONSTANT  shift 52
+	REAL_CONSTANT  shift 53
+	ID  shift 72
+	'-'  shift 60
+	'('  shift 61
+	'!'  shift 62
+	.  error
+
+	expressionS  goto 76
+	expression  goto 77
+
+
+state 59
+	statement : WRITE . expressionS ';'  (12)
+
+	INT_CONSTANT  shift 51
+	CHAR_CONSTANT  shift 52
+	REAL_CONSTANT  shift 53
+	ID  shift 72
+	'-'  shift 60
+	'('  shift 61
+	'!'  shift 62
+	.  error
+
+	expressionS  goto 78
+	expression  goto 77
+
+
+state 60
+	expression : '-' . expression  (28)
+
+	INT_CONSTANT  shift 51
+	CHAR_CONSTANT  shift 52
+	REAL_CONSTANT  shift 53
+	ID  shift 72
+	'-'  shift 60
+	'('  shift 61
+	'!'  shift 62
+	.  error
+
+	expression  goto 79
+
+
+state 61
+	expression : '(' . expression ')'  (29)
+	expression : '(' . type ')' expression  (40)
+
+	INT_CONSTANT  shift 51
+	CHAR_CONSTANT  shift 52
+	REAL_CONSTANT  shift 53
+	INT  shift 3
+	CHAR  shift 4
+	DOUBLE  shift 5
+	STRUCT  shift 6
+	ID  shift 72
+	'-'  shift 60
+	'('  shift 61
+	'!'  shift 62
+	.  error
+
+	type  goto 80
+	expression  goto 81
+
+
+state 62
+	expression : '!' . expression  (39)
+
+	INT_CONSTANT  shift 51
+	CHAR_CONSTANT  shift 52
+	REAL_CONSTANT  shift 53
+	ID  shift 72
+	'-'  shift 60
+	'('  shift 61
+	'!'  shift 62
+	.  error
+
+	expression  goto 82
+
+
+state 63
+	program : body VOID MAIN '(' ')' '{' varDefinitionOP statementOP . '}'  (1)
+
+	'}'  shift 83
+	.  error
+
+
+state 64
+	statementOP : statementS .  (7)
+	statementS : statementS . statement  (9)
+
+	INT_CONSTANT  shift 51
+	CHAR_CONSTANT  shift 52
+	REAL_CONSTANT  shift 53
+	WHILE  shift 54
+	RETURN  shift 55
+	ID  shift 56
+	IF  shift 57
+	READ  shift 58
+	WRITE  shift 59
+	'-'  shift 60
+	'('  shift 61
+	'!'  shift 62
+	'}'  reduce 7
+
+	statement  goto 84
+	expression  goto 66
+	ifStatement  goto 67
+
+
+state 65
+	statementS : statement .  (10)
+
+	.  reduce 10
+
+
+state 66
+	statement : expression . '=' expression ';'  (13)
+	expression : expression . '+' expression  (23)
+	expression : expression . '-' expression  (24)
+	expression : expression . '*' expression  (25)
+	expression : expression . '/' expression  (26)
+	expression : expression . '%' expression  (27)
+	expression : expression . '>' expression  (30)
+	expression : expression . '<' expression  (31)
+	expression : expression . LESS_EQUAL expression  (32)
+	expression : expression . GREATER_EQUAL expression  (33)
+	expression : expression . EQUAL expression  (34)
+	expression : expression . NOT_EQUAL expression  (35)
+	expression : expression . AND expression  (36)
+	expression : expression . OR expression  (37)
+	expression : expression . '.' ID  (41)
+	expression : expression . '[' expression ']'  (42)
+
+	AND  shift 85
+	OR  shift 86
+	EQUAL  shift 87
+	NOT_EQUAL  shift 88
+	LESS_EQUAL  shift 89
+	GREATER_EQUAL  shift 90
+	'='  shift 91
+	'<'  shift 92
+	'>'  shift 93
+	'+'  shift 94
+	'-'  shift 95
+	'*'  shift 96
+	'/'  shift 97
+	'%'  shift 98
+	'['  shift 99
+	'.'  shift 100
+	.  error
+
+
+state 67
+	statement : ifStatement .  (16)
+
+	.  reduce 16
+
+
+state 68
+	varDefinitionS : varDefinitionS varDefinition .  (54)
+
+	.  reduce 54
+
+
+state 69
+	funDefinition : VOID ID '(' parameterOP ')' '{' varDefinitionOP . statementOP '}'  (6)
+	statementOP : .  (8)
+
+	INT_CONSTANT  shift 51
+	CHAR_CONSTANT  shift 52
+	REAL_CONSTANT  shift 53
+	WHILE  shift 54
+	RETURN  shift 55
+	ID  shift 56
+	IF  shift 57
+	READ  shift 58
+	WRITE  shift 59
+	'-'  shift 60
+	'('  shift 61
+	'!'  shift 62
+	'}'  reduce 8
+
+	statementOP  goto 101
+	statementS  goto 64
+	statement  goto 65
+	expression  goto 66
+	ifStatement  goto 67
+
+
+state 70
+	funDefinition : type ID '(' parameterOP ')' '{' varDefinitionOP . statementOP '}'  (5)
+	statementOP : .  (8)
+
+	INT_CONSTANT  shift 51
+	CHAR_CONSTANT  shift 52
+	REAL_CONSTANT  shift 53
+	WHILE  shift 54
+	RETURN  shift 55
+	ID  shift 56
+	IF  shift 57
+	READ  shift 58
+	WRITE  shift 59
+	'-'  shift 60
+	'('  shift 61
+	'!'  shift 62
+	'}'  reduce 8
+
+	statementOP  goto 102
+	statementS  goto 64
+	statement  goto 65
+	expression  goto 66
+	ifStatement  goto 67
+
+
+state 71
+	statement : WHILE '(' . expression ')' complexStatement  (15)
+
+	INT_CONSTANT  shift 51
+	CHAR_CONSTANT  shift 52
+	REAL_CONSTANT  shift 53
+	ID  shift 72
+	'-'  shift 60
+	'('  shift 61
+	'!'  shift 62
+	.  error
+
+	expression  goto 103
+
+
+state 72
+	expression : ID . '(' argumentOP ')'  (38)
+	expression : ID .  (43)
+
+	'('  shift 104
+	AND  reduce 43
+	OR  reduce 43
+	EQUAL  reduce 43
+	NOT_EQUAL  reduce 43
+	LESS_EQUAL  reduce 43
+	GREATER_EQUAL  reduce 43
+	'='  reduce 43
+	'<'  reduce 43
+	'>'  reduce 43
+	'+'  reduce 43
+	'-'  reduce 43
+	'*'  reduce 43
+	'/'  reduce 43
+	'%'  reduce 43
+	'['  reduce 43
+	']'  reduce 43
+	'.'  reduce 43
+	')'  reduce 43
+	';'  reduce 43
+	','  reduce 43
+
+
+state 73
+	statement : RETURN expression . ';'  (17)
+	expression : expression . '+' expression  (23)
+	expression : expression . '-' expression  (24)
+	expression : expression . '*' expression  (25)
+	expression : expression . '/' expression  (26)
+	expression : expression . '%' expression  (27)
+	expression : expression . '>' expression  (30)
+	expression : expression . '<' expression  (31)
+	expression : expression . LESS_EQUAL expression  (32)
+	expression : expression . GREATER_EQUAL expression  (33)
+	expression : expression . EQUAL expression  (34)
+	expression : expression . NOT_EQUAL expression  (35)
+	expression : expression . AND expression  (36)
+	expression : expression . OR expression  (37)
+	expression : expression . '.' ID  (41)
+	expression : expression . '[' expression ']'  (42)
+
+	AND  shift 85
+	OR  shift 86
+	EQUAL  shift 87
+	NOT_EQUAL  shift 88
+	LESS_EQUAL  shift 89
+	GREATER_EQUAL  shift 90
+	'<'  shift 92
+	'>'  shift 93
+	'+'  shift 94
+	'-'  shift 95
+	'*'  shift 96
+	'/'  shift 97
+	'%'  shift 98
+	'['  shift 99
+	'.'  shift 100
+	';'  shift 105
+	.  error
+
+
+state 74
+	statement : ID '(' . argumentOP ')' ';'  (14)
+	expression : ID '(' . argumentOP ')'  (38)
+	argumentOP : .  (61)
+
+	INT_CONSTANT  shift 51
+	CHAR_CONSTANT  shift 52
+	REAL_CONSTANT  shift 53
+	ID  shift 72
+	'-'  shift 60
+	'('  shift 61
+	'!'  shift 62
+	')'  reduce 61
+
+	expression  goto 106
+	argumentOP  goto 107
+	argumentS  goto 108
+
+
+state 75
+	ifStatement : IF '(' . expression ')' complexStatement else  (18)
+
+	INT_CONSTANT  shift 51
+	CHAR_CONSTANT  shift 52
+	REAL_CONSTANT  shift 53
+	ID  shift 72
+	'-'  shift 60
+	'('  shift 61
+	'!'  shift 62
+	.  error
+
+	expression  goto 109
+
+
+state 76
+	statement : READ expressionS . ';'  (11)
+	expressionS : expressionS . ',' expression  (47)
+
+	';'  shift 110
+	','  shift 111
+	.  error
+
+
+state 77
+	expression : expression . '+' expression  (23)
+	expression : expression . '-' expression  (24)
+	expression : expression . '*' expression  (25)
+	expression : expression . '/' expression  (26)
+	expression : expression . '%' expression  (27)
+	expression : expression . '>' expression  (30)
+	expression : expression . '<' expression  (31)
+	expression : expression . LESS_EQUAL expression  (32)
+	expression : expression . GREATER_EQUAL expression  (33)
+	expression : expression . EQUAL expression  (34)
+	expression : expression . NOT_EQUAL expression  (35)
+	expression : expression . AND expression  (36)
+	expression : expression . OR expression  (37)
+	expression : expression . '.' ID  (41)
+	expression : expression . '[' expression ']'  (42)
+	expressionS : expression .  (48)
+
+	AND  shift 85
+	OR  shift 86
+	EQUAL  shift 87
+	NOT_EQUAL  shift 88
+	LESS_EQUAL  shift 89
+	GREATER_EQUAL  shift 90
+	'<'  shift 92
+	'>'  shift 93
+	'+'  shift 94
+	'-'  shift 95
+	'*'  shift 96
+	'/'  shift 97
+	'%'  shift 98
+	'['  shift 99
+	'.'  shift 100
+	';'  reduce 48
+	','  reduce 48
+
+
+state 78
+	statement : WRITE expressionS . ';'  (12)
+	expressionS : expressionS . ',' expression  (47)
+
+	';'  shift 112
+	','  shift 111
+	.  error
+
+
+state 79
+	expression : expression . '+' expression  (23)
+	expression : expression . '-' expression  (24)
+	expression : expression . '*' expression  (25)
+	expression : expression . '/' expression  (26)
+	expression : expression . '%' expression  (27)
+	expression : '-' expression .  (28)
+	expression : expression . '>' expression  (30)
+	expression : expression . '<' expression  (31)
+	expression : expression . LESS_EQUAL expression  (32)
+	expression : expression . GREATER_EQUAL expression  (33)
+	expression : expression . EQUAL expression  (34)
+	expression : expression . NOT_EQUAL expression  (35)
+	expression : expression . AND expression  (36)
+	expression : expression . OR expression  (37)
+	expression : expression . '.' ID  (41)
+	expression : expression . '[' expression ']'  (42)
+
+	'['  shift 99
+	'.'  shift 100
+	AND  reduce 28
+	OR  reduce 28
+	EQUAL  reduce 28
+	NOT_EQUAL  reduce 28
+	LESS_EQUAL  reduce 28
+	GREATER_EQUAL  reduce 28
+	'='  reduce 28
+	'<'  reduce 28
+	'>'  reduce 28
+	'+'  reduce 28
+	'-'  reduce 28
+	'*'  reduce 28
+	'/'  reduce 28
+	'%'  reduce 28
+	']'  reduce 28
+	')'  reduce 28
+	';'  reduce 28
+	','  reduce 28
+
+
+state 80
+	expression : '(' type . ')' expression  (40)
+	type : type . '[' INT_CONSTANT ']'  (73)
+
+	'['  shift 15
+	')'  shift 113
+	.  error
+
+
+state 81
+	expression : expression . '+' expression  (23)
+	expression : expression . '-' expression  (24)
+	expression : expression . '*' expression  (25)
+	expression : expression . '/' expression  (26)
+	expression : expression . '%' expression  (27)
+	expression : '(' expression . ')'  (29)
+	expression : expression . '>' expression  (30)
+	expression : expression . '<' expression  (31)
+	expression : expression . LESS_EQUAL expression  (32)
+	expression : expression . GREATER_EQUAL expression  (33)
+	expression : expression . EQUAL expression  (34)
+	expression : expression . NOT_EQUAL expression  (35)
+	expression : expression . AND expression  (36)
+	expression : expression . OR expression  (37)
+	expression : expression . '.' ID  (41)
+	expression : expression . '[' expression ']'  (42)
+
+	AND  shift 85
+	OR  shift 86
+	EQUAL  shift 87
+	NOT_EQUAL  shift 88
+	LESS_EQUAL  shift 89
+	GREATER_EQUAL  shift 90
+	'<'  shift 92
+	'>'  shift 93
+	'+'  shift 94
+	'-'  shift 95
+	'*'  shift 96
+	'/'  shift 97
+	'%'  shift 98
+	'['  shift 99
+	'.'  shift 100
+	')'  shift 114
+	.  error
+
+
+state 82
+	expression : expression . '+' expression  (23)
+	expression : expression . '-' expression  (24)
+	expression : expression . '*' expression  (25)
+	expression : expression . '/' expression  (26)
+	expression : expression . '%' expression  (27)
+	expression : expression . '>' expression  (30)
+	expression : expression . '<' expression  (31)
+	expression : expression . LESS_EQUAL expression  (32)
+	expression : expression . GREATER_EQUAL expression  (33)
+	expression : expression . EQUAL expression  (34)
+	expression : expression . NOT_EQUAL expression  (35)
+	expression : expression . AND expression  (36)
+	expression : expression . OR expression  (37)
+	expression : '!' expression .  (39)
+	expression : expression . '.' ID  (41)
+	expression : expression . '[' expression ']'  (42)
+
+	EQUAL  shift 87
+	NOT_EQUAL  shift 88
+	LESS_EQUAL  shift 89
+	GREATER_EQUAL  shift 90
+	'<'  shift 92
+	'>'  shift 93
+	'+'  shift 94
+	'-'  shift 95
+	'*'  shift 96
+	'/'  shift 97
+	'%'  shift 98
+	'['  shift 99
+	'.'  shift 100
+	AND  reduce 39
+	OR  reduce 39
+	'='  reduce 39
+	']'  reduce 39
+	')'  reduce 39
+	';'  reduce 39
+	','  reduce 39
+
+
+state 83
+	program : body VOID MAIN '(' ')' '{' varDefinitionOP statementOP '}' .  (1)
+
+	.  reduce 1
+
+
+state 84
+	statementS : statementS statement .  (9)
+
+	.  reduce 9
+
+
+state 85
+	expression : expression AND . expression  (36)
+
+	INT_CONSTANT  shift 51
+	CHAR_CONSTANT  shift 52
+	REAL_CONSTANT  shift 53
+	ID  shift 72
+	'-'  shift 60
+	'('  shift 61
+	'!'  shift 62
+	.  error
+
+	expression  goto 115
+
+
+state 86
+	expression : expression OR . expression  (37)
+
+	INT_CONSTANT  shift 51
+	CHAR_CONSTANT  shift 52
+	REAL_CONSTANT  shift 53
+	ID  shift 72
+	'-'  shift 60
+	'('  shift 61
+	'!'  shift 62
+	.  error
+
+	expression  goto 116
+
+
+state 87
+	expression : expression EQUAL . expression  (34)
+
+	INT_CONSTANT  shift 51
+	CHAR_CONSTANT  shift 52
+	REAL_CONSTANT  shift 53
+	ID  shift 72
+	'-'  shift 60
+	'('  shift 61
+	'!'  shift 62
+	.  error
+
+	expression  goto 117
+
+
+state 88
+	expression : expression NOT_EQUAL . expression  (35)
+
+	INT_CONSTANT  shift 51
+	CHAR_CONSTANT  shift 52
+	REAL_CONSTANT  shift 53
+	ID  shift 72
+	'-'  shift 60
+	'('  shift 61
+	'!'  shift 62
+	.  error
+
+	expression  goto 118
+
+
+state 89
+	expression : expression LESS_EQUAL . expression  (32)
+
+	INT_CONSTANT  shift 51
+	CHAR_CONSTANT  shift 52
+	REAL_CONSTANT  shift 53
+	ID  shift 72
+	'-'  shift 60
+	'('  shift 61
+	'!'  shift 62
+	.  error
+
+	expression  goto 119
+
+
+state 90
+	expression : expression GREATER_EQUAL . expression  (33)
+
+	INT_CONSTANT  shift 51
+	CHAR_CONSTANT  shift 52
+	REAL_CONSTANT  shift 53
+	ID  shift 72
+	'-'  shift 60
+	'('  shift 61
+	'!'  shift 62
+	.  error
+
+	expression  goto 120
+
+
+state 91
+	statement : expression '=' . expression ';'  (13)
+
+	INT_CONSTANT  shift 51
+	CHAR_CONSTANT  shift 52
+	REAL_CONSTANT  shift 53
+	ID  shift 72
+	'-'  shift 60
+	'('  shift 61
+	'!'  shift 62
+	.  error
+
+	expression  goto 121
+
+
+state 92
+	expression : expression '<' . expression  (31)
+
+	INT_CONSTANT  shift 51
+	CHAR_CONSTANT  shift 52
+	REAL_CONSTANT  shift 53
+	ID  shift 72
+	'-'  shift 60
+	'('  shift 61
+	'!'  shift 62
+	.  error
+
+	expression  goto 122
+
+
+state 93
+	expression : expression '>' . expression  (30)
+
+	INT_CONSTANT  shift 51
+	CHAR_CONSTANT  shift 52
+	REAL_CONSTANT  shift 53
+	ID  shift 72
+	'-'  shift 60
+	'('  shift 61
+	'!'  shift 62
+	.  error
+
+	expression  goto 123
+
+
+state 94
+	expression : expression '+' . expression  (23)
+
+	INT_CONSTANT  shift 51
+	CHAR_CONSTANT  shift 52
+	REAL_CONSTANT  shift 53
+	ID  shift 72
+	'-'  shift 60
+	'('  shift 61
+	'!'  shift 62
+	.  error
+
+	expression  goto 124
+
+
+state 95
+	expression : expression '-' . expression  (24)
+
+	INT_CONSTANT  shift 51
+	CHAR_CONSTANT  shift 52
+	REAL_CONSTANT  shift 53
+	ID  shift 72
+	'-'  shift 60
+	'('  shift 61
+	'!'  shift 62
+	.  error
+
+	expression  goto 125
+
+
+state 96
+	expression : expression '*' . expression  (25)
+
+	INT_CONSTANT  shift 51
+	CHAR_CONSTANT  shift 52
+	REAL_CONSTANT  shift 53
+	ID  shift 72
+	'-'  shift 60
+	'('  shift 61
+	'!'  shift 62
+	.  error
+
+	expression  goto 126
+
+
+state 97
+	expression : expression '/' . expression  (26)
+
+	INT_CONSTANT  shift 51
+	CHAR_CONSTANT  shift 52
+	REAL_CONSTANT  shift 53
+	ID  shift 72
+	'-'  shift 60
+	'('  shift 61
+	'!'  shift 62
+	.  error
+
+	expression  goto 127
+
+
+state 98
+	expression : expression '%' . expression  (27)
+
+	INT_CONSTANT  shift 51
+	CHAR_CONSTANT  shift 52
+	REAL_CONSTANT  shift 53
+	ID  shift 72
+	'-'  shift 60
+	'('  shift 61
+	'!'  shift 62
+	.  error
+
+	expression  goto 128
+
+
+state 99
+	expression : expression '[' . expression ']'  (42)
+
+	INT_CONSTANT  shift 51
+	CHAR_CONSTANT  shift 52
+	REAL_CONSTANT  shift 53
+	ID  shift 72
+	'-'  shift 60
+	'('  shift 61
+	'!'  shift 62
+	.  error
+
+	expression  goto 129
+
+
+state 100
+	expression : expression '.' . ID  (41)
+
+	ID  shift 130
+	.  error
+
+
+state 101
+	funDefinition : VOID ID '(' parameterOP ')' '{' varDefinitionOP statementOP . '}'  (6)
+
+	'}'  shift 131
+	.  error
+
+
+state 102
+	funDefinition : type ID '(' parameterOP ')' '{' varDefinitionOP statementOP . '}'  (5)
+
+	'}'  shift 132
+	.  error
+
+
+state 103
+	statement : WHILE '(' expression . ')' complexStatement  (15)
+	expression : expression . '+' expression  (23)
+	expression : expression . '-' expression  (24)
+	expression : expression . '*' expression  (25)
+	expression : expression . '/' expression  (26)
+	expression : expression . '%' expression  (27)
+	expression : expression . '>' expression  (30)
+	expression : expression . '<' expression  (31)
+	expression : expression . LESS_EQUAL expression  (32)
+	expression : expression . GREATER_EQUAL expression  (33)
+	expression : expression . EQUAL expression  (34)
+	expression : expression . NOT_EQUAL expression  (35)
+	expression : expression . AND expression  (36)
+	expression : expression . OR expression  (37)
+	expression : expression . '.' ID  (41)
+	expression : expression . '[' expression ']'  (42)
+
+	AND  shift 85
+	OR  shift 86
+	EQUAL  shift 87
+	NOT_EQUAL  shift 88
+	LESS_EQUAL  shift 89
+	GREATER_EQUAL  shift 90
+	'<'  shift 92
+	'>'  shift 93
+	'+'  shift 94
+	'-'  shift 95
+	'*'  shift 96
+	'/'  shift 97
+	'%'  shift 98
+	'['  shift 99
+	'.'  shift 100
+	')'  shift 133
+	.  error
+
+
+state 104
+	expression : ID '(' . argumentOP ')'  (38)
+	argumentOP : .  (61)
+
+	INT_CONSTANT  shift 51
+	CHAR_CONSTANT  shift 52
+	REAL_CONSTANT  shift 53
+	ID  shift 72
+	'-'  shift 60
+	'('  shift 61
+	'!'  shift 62
+	')'  reduce 61
+
+	expression  goto 106
+	argumentOP  goto 134
+	argumentS  goto 108
+
+
+state 105
+	statement : RETURN expression ';' .  (17)
+
+	.  reduce 17
+
+
+state 106
+	expression : expression . '+' expression  (23)
+	expression : expression . '-' expression  (24)
+	expression : expression . '*' expression  (25)
+	expression : expression . '/' expression  (26)
+	expression : expression . '%' expression  (27)
+	expression : expression . '>' expression  (30)
+	expression : expression . '<' expression  (31)
+	expression : expression . LESS_EQUAL expression  (32)
+	expression : expression . GREATER_EQUAL expression  (33)
+	expression : expression . EQUAL expression  (34)
+	expression : expression . NOT_EQUAL expression  (35)
+	expression : expression . AND expression  (36)
+	expression : expression . OR expression  (37)
+	expression : expression . '.' ID  (41)
+	expression : expression . '[' expression ']'  (42)
+	argumentS : expression .  (59)
+
+	AND  shift 85
+	OR  shift 86
+	EQUAL  shift 87
+	NOT_EQUAL  shift 88
+	LESS_EQUAL  shift 89
+	GREATER_EQUAL  shift 90
+	'<'  shift 92
+	'>'  shift 93
+	'+'  shift 94
+	'-'  shift 95
+	'*'  shift 96
+	'/'  shift 97
+	'%'  shift 98
+	'['  shift 99
+	'.'  shift 100
+	')'  reduce 59
+	','  reduce 59
+
+
+state 107
+	statement : ID '(' argumentOP . ')' ';'  (14)
+	expression : ID '(' argumentOP . ')'  (38)
+
+	')'  shift 135
+	.  error
+
+
+state 108
+	argumentS : argumentS . ',' expression  (58)
+	argumentOP : argumentS .  (60)
+
+	','  shift 136
+	')'  reduce 60
+
+
+state 109
+	ifStatement : IF '(' expression . ')' complexStatement else  (18)
+	expression : expression . '+' expression  (23)
+	expression : expression . '-' expression  (24)
+	expression : expression . '*' expression  (25)
+	expression : expression . '/' expression  (26)
+	expression : expression . '%' expression  (27)
+	expression : expression . '>' expression  (30)
+	expression : expression . '<' expression  (31)
+	expression : expression . LESS_EQUAL expression  (32)
+	expression : expression . GREATER_EQUAL expression  (33)
+	expression : expression . EQUAL expression  (34)
+	expression : expression . NOT_EQUAL expression  (35)
+	expression : expression . AND expression  (36)
+	expression : expression . OR expression  (37)
+	expression : expression . '.' ID  (41)
+	expression : expression . '[' expression ']'  (42)
+
+	AND  shift 85
+	OR  shift 86
+	EQUAL  shift 87
+	NOT_EQUAL  shift 88
+	LESS_EQUAL  shift 89
+	GREATER_EQUAL  shift 90
+	'<'  shift 92
+	'>'  shift 93
+	'+'  shift 94
+	'-'  shift 95
+	'*'  shift 96
+	'/'  shift 97
+	'%'  shift 98
+	'['  shift 99
+	'.'  shift 100
+	')'  shift 137
+	.  error
+
+
+state 110
+	statement : READ expressionS ';' .  (11)
+
+	.  reduce 11
+
+
+state 111
+	expressionS : expressionS ',' . expression  (47)
+
+	INT_CONSTANT  shift 51
+	CHAR_CONSTANT  shift 52
+	REAL_CONSTANT  shift 53
+	ID  shift 72
+	'-'  shift 60
+	'('  shift 61
+	'!'  shift 62
+	.  error
+
+	expression  goto 138
+
+
+state 112
+	statement : WRITE expressionS ';' .  (12)
+
+	.  reduce 12
+
+
+state 113
+	expression : '(' type ')' . expression  (40)
+
+	INT_CONSTANT  shift 51
+	CHAR_CONSTANT  shift 52
+	REAL_CONSTANT  shift 53
+	ID  shift 72
+	'-'  shift 60
+	'('  shift 61
+	'!'  shift 62
+	.  error
+
+	expression  goto 139
+
+
+state 114
+	expression : '(' expression ')' .  (29)
+
+	.  reduce 29
+
+
+state 115
+	expression : expression . '+' expression  (23)
+	expression : expression . '-' expression  (24)
+	expression : expression . '*' expression  (25)
+	expression : expression . '/' expression  (26)
+	expression : expression . '%' expression  (27)
+	expression : expression . '>' expression  (30)
+	expression : expression . '<' expression  (31)
+	expression : expression . LESS_EQUAL expression  (32)
+	expression : expression . GREATER_EQUAL expression  (33)
+	expression : expression . EQUAL expression  (34)
+	expression : expression . NOT_EQUAL expression  (35)
+	expression : expression . AND expression  (36)
+	expression : expression AND expression .  (36)
+	expression : expression . OR expression  (37)
+	expression : expression . '.' ID  (41)
+	expression : expression . '[' expression ']'  (42)
+
+	EQUAL  shift 87
+	NOT_EQUAL  shift 88
+	LESS_EQUAL  shift 89
+	GREATER_EQUAL  shift 90
+	'<'  shift 92
+	'>'  shift 93
+	'+'  shift 94
+	'-'  shift 95
+	'*'  shift 96
+	'/'  shift 97
+	'%'  shift 98
+	'['  shift 99
+	'.'  shift 100
+	AND  reduce 36
+	OR  reduce 36
+	'='  reduce 36
+	']'  reduce 36
+	')'  reduce 36
+	';'  reduce 36
+	','  reduce 36
+
+
+state 116
+	expression : expression . '+' expression  (23)
+	expression : expression . '-' expression  (24)
+	expression : expression . '*' expression  (25)
+	expression : expression . '/' expression  (26)
+	expression : expression . '%' expression  (27)
+	expression : expression . '>' expression  (30)
+	expression : expression . '<' expression  (31)
+	expression : expression . LESS_EQUAL expression  (32)
+	expression : expression . GREATER_EQUAL expression  (33)
+	expression : expression . EQUAL expression  (34)
+	expression : expression . NOT_EQUAL expression  (35)
+	expression : expression . AND expression  (36)
+	expression : expression . OR expression  (37)
+	expression : expression OR expression .  (37)
+	expression : expression . '.' ID  (41)
+	expression : expression . '[' expression ']'  (42)
+
+	EQUAL  shift 87
+	NOT_EQUAL  shift 88
+	LESS_EQUAL  shift 89
+	GREATER_EQUAL  shift 90
+	'<'  shift 92
+	'>'  shift 93
+	'+'  shift 94
+	'-'  shift 95
+	'*'  shift 96
+	'/'  shift 97
+	'%'  shift 98
+	'['  shift 99
+	'.'  shift 100
+	AND  reduce 37
+	OR  reduce 37
+	'='  reduce 37
+	']'  reduce 37
+	')'  reduce 37
+	';'  reduce 37
+	','  reduce 37
+
+
+state 117
+	expression : expression . '+' expression  (23)
+	expression : expression . '-' expression  (24)
+	expression : expression . '*' expression  (25)
+	expression : expression . '/' expression  (26)
+	expression : expression . '%' expression  (27)
+	expression : expression . '>' expression  (30)
+	expression : expression . '<' expression  (31)
+	expression : expression . LESS_EQUAL expression  (32)
+	expression : expression . GREATER_EQUAL expression  (33)
+	expression : expression . EQUAL expression  (34)
+	expression : expression EQUAL expression .  (34)
+	expression : expression . NOT_EQUAL expression  (35)
+	expression : expression . AND expression  (36)
+	expression : expression . OR expression  (37)
+	expression : expression . '.' ID  (41)
+	expression : expression . '[' expression ']'  (42)
+
+	'+'  shift 94
+	'-'  shift 95
+	'*'  shift 96
+	'/'  shift 97
+	'%'  shift 98
+	'['  shift 99
+	'.'  shift 100
+	AND  reduce 34
+	OR  reduce 34
+	EQUAL  reduce 34
+	NOT_EQUAL  reduce 34
+	LESS_EQUAL  reduce 34
+	GREATER_EQUAL  reduce 34
+	'='  reduce 34
+	'<'  reduce 34
+	'>'  reduce 34
+	']'  reduce 34
+	')'  reduce 34
+	';'  reduce 34
+	','  reduce 34
+
+
+state 118
+	expression : expression . '+' expression  (23)
+	expression : expression . '-' expression  (24)
+	expression : expression . '*' expression  (25)
+	expression : expression . '/' expression  (26)
+	expression : expression . '%' expression  (27)
+	expression : expression . '>' expression  (30)
+	expression : expression . '<' expression  (31)
+	expression : expression . LESS_EQUAL expression  (32)
+	expression : expression . GREATER_EQUAL expression  (33)
+	expression : expression . EQUAL expression  (34)
+	expression : expression . NOT_EQUAL expression  (35)
+	expression : expression NOT_EQUAL expression .  (35)
+	expression : expression . AND expression  (36)
+	expression : expression . OR expression  (37)
+	expression : expression . '.' ID  (41)
+	expression : expression . '[' expression ']'  (42)
+
+	'+'  shift 94
+	'-'  shift 95
+	'*'  shift 96
+	'/'  shift 97
+	'%'  shift 98
+	'['  shift 99
+	'.'  shift 100
+	AND  reduce 35
+	OR  reduce 35
+	EQUAL  reduce 35
+	NOT_EQUAL  reduce 35
+	LESS_EQUAL  reduce 35
+	GREATER_EQUAL  reduce 35
+	'='  reduce 35
+	'<'  reduce 35
+	'>'  reduce 35
+	']'  reduce 35
+	')'  reduce 35
+	';'  reduce 35
+	','  reduce 35
+
+
+state 119
+	expression : expression . '+' expression  (23)
+	expression : expression . '-' expression  (24)
+	expression : expression . '*' expression  (25)
+	expression : expression . '/' expression  (26)
+	expression : expression . '%' expression  (27)
+	expression : expression . '>' expression  (30)
+	expression : expression . '<' expression  (31)
+	expression : expression . LESS_EQUAL expression  (32)
+	expression : expression LESS_EQUAL expression .  (32)
+	expression : expression . GREATER_EQUAL expression  (33)
+	expression : expression . EQUAL expression  (34)
+	expression : expression . NOT_EQUAL expression  (35)
+	expression : expression . AND expression  (36)
+	expression : expression . OR expression  (37)
+	expression : expression . '.' ID  (41)
+	expression : expression . '[' expression ']'  (42)
+
+	'+'  shift 94
+	'-'  shift 95
+	'*'  shift 96
+	'/'  shift 97
+	'%'  shift 98
+	'['  shift 99
+	'.'  shift 100
+	AND  reduce 32
+	OR  reduce 32
+	EQUAL  reduce 32
+	NOT_EQUAL  reduce 32
+	LESS_EQUAL  reduce 32
+	GREATER_EQUAL  reduce 32
+	'='  reduce 32
+	'<'  reduce 32
+	'>'  reduce 32
+	']'  reduce 32
+	')'  reduce 32
+	';'  reduce 32
+	','  reduce 32
+
+
+state 120
+	expression : expression . '+' expression  (23)
+	expression : expression . '-' expression  (24)
+	expression : expression . '*' expression  (25)
+	expression : expression . '/' expression  (26)
+	expression : expression . '%' expression  (27)
+	expression : expression . '>' expression  (30)
+	expression : expression . '<' expression  (31)
+	expression : expression . LESS_EQUAL expression  (32)
+	expression : expression . GREATER_EQUAL expression  (33)
+	expression : expression GREATER_EQUAL expression .  (33)
+	expression : expression . EQUAL expression  (34)
+	expression : expression . NOT_EQUAL expression  (35)
+	expression : expression . AND expression  (36)
+	expression : expression . OR expression  (37)
+	expression : expression . '.' ID  (41)
+	expression : expression . '[' expression ']'  (42)
+
+	'+'  shift 94
+	'-'  shift 95
+	'*'  shift 96
+	'/'  shift 97
+	'%'  shift 98
+	'['  shift 99
+	'.'  shift 100
+	AND  reduce 33
+	OR  reduce 33
+	EQUAL  reduce 33
+	NOT_EQUAL  reduce 33
+	LESS_EQUAL  reduce 33
+	GREATER_EQUAL  reduce 33
+	'='  reduce 33
+	'<'  reduce 33
+	'>'  reduce 33
+	']'  reduce 33
+	')'  reduce 33
+	';'  reduce 33
+	','  reduce 33
+
+
+state 121
+	statement : expression '=' expression . ';'  (13)
+	expression : expression . '+' expression  (23)
+	expression : expression . '-' expression  (24)
+	expression : expression . '*' expression  (25)
+	expression : expression . '/' expression  (26)
+	expression : expression . '%' expression  (27)
+	expression : expression . '>' expression  (30)
+	expression : expression . '<' expression  (31)
+	expression : expression . LESS_EQUAL expression  (32)
+	expression : expression . GREATER_EQUAL expression  (33)
+	expression : expression . EQUAL expression  (34)
+	expression : expression . NOT_EQUAL expression  (35)
+	expression : expression . AND expression  (36)
+	expression : expression . OR expression  (37)
+	expression : expression . '.' ID  (41)
+	expression : expression . '[' expression ']'  (42)
+
+	AND  shift 85
+	OR  shift 86
+	EQUAL  shift 87
+	NOT_EQUAL  shift 88
+	LESS_EQUAL  shift 89
+	GREATER_EQUAL  shift 90
+	'<'  shift 92
+	'>'  shift 93
+	'+'  shift 94
+	'-'  shift 95
+	'*'  shift 96
+	'/'  shift 97
+	'%'  shift 98
+	'['  shift 99
+	'.'  shift 100
+	';'  shift 140
+	.  error
+
+
+state 122
+	expression : expression . '+' expression  (23)
+	expression : expression . '-' expression  (24)
+	expression : expression . '*' expression  (25)
+	expression : expression . '/' expression  (26)
+	expression : expression . '%' expression  (27)
+	expression : expression . '>' expression  (30)
+	expression : expression . '<' expression  (31)
+	expression : expression '<' expression .  (31)
+	expression : expression . LESS_EQUAL expression  (32)
+	expression : expression . GREATER_EQUAL expression  (33)
+	expression : expression . EQUAL expression  (34)
+	expression : expression . NOT_EQUAL expression  (35)
+	expression : expression . AND expression  (36)
+	expression : expression . OR expression  (37)
+	expression : expression . '.' ID  (41)
+	expression : expression . '[' expression ']'  (42)
+
+	'+'  shift 94
+	'-'  shift 95
+	'*'  shift 96
+	'/'  shift 97
+	'%'  shift 98
+	'['  shift 99
+	'.'  shift 100
+	AND  reduce 31
+	OR  reduce 31
+	EQUAL  reduce 31
+	NOT_EQUAL  reduce 31
+	LESS_EQUAL  reduce 31
+	GREATER_EQUAL  reduce 31
+	'='  reduce 31
+	'<'  reduce 31
+	'>'  reduce 31
+	']'  reduce 31
+	')'  reduce 31
+	';'  reduce 31
+	','  reduce 31
+
+
+state 123
+	expression : expression . '+' expression  (23)
+	expression : expression . '-' expression  (24)
+	expression : expression . '*' expression  (25)
+	expression : expression . '/' expression  (26)
+	expression : expression . '%' expression  (27)
+	expression : expression . '>' expression  (30)
+	expression : expression '>' expression .  (30)
+	expression : expression . '<' expression  (31)
+	expression : expression . LESS_EQUAL expression  (32)
+	expression : expression . GREATER_EQUAL expression  (33)
+	expression : expression . EQUAL expression  (34)
+	expression : expression . NOT_EQUAL expression  (35)
+	expression : expression . AND expression  (36)
+	expression : expression . OR expression  (37)
+	expression : expression . '.' ID  (41)
+	expression : expression . '[' expression ']'  (42)
+
+	'+'  shift 94
+	'-'  shift 95
+	'*'  shift 96
+	'/'  shift 97
+	'%'  shift 98
+	'['  shift 99
+	'.'  shift 100
+	AND  reduce 30
+	OR  reduce 30
+	EQUAL  reduce 30
+	NOT_EQUAL  reduce 30
+	LESS_EQUAL  reduce 30
+	GREATER_EQUAL  reduce 30
+	'='  reduce 30
+	'<'  reduce 30
+	'>'  reduce 30
+	']'  reduce 30
+	')'  reduce 30
+	';'  reduce 30
+	','  reduce 30
+
+
+state 124
+	expression : expression . '+' expression  (23)
+	expression : expression '+' expression .  (23)
+	expression : expression . '-' expression  (24)
+	expression : expression . '*' expression  (25)
+	expression : expression . '/' expression  (26)
+	expression : expression . '%' expression  (27)
+	expression : expression . '>' expression  (30)
+	expression : expression . '<' expression  (31)
+	expression : expression . LESS_EQUAL expression  (32)
+	expression : expression . GREATER_EQUAL expression  (33)
+	expression : expression . EQUAL expression  (34)
+	expression : expression . NOT_EQUAL expression  (35)
+	expression : expression . AND expression  (36)
+	expression : expression . OR expression  (37)
+	expression : expression . '.' ID  (41)
+	expression : expression . '[' expression ']'  (42)
+
+	'*'  shift 96
+	'/'  shift 97
+	'%'  shift 98
+	'['  shift 99
+	'.'  shift 100
+	AND  reduce 23
+	OR  reduce 23
+	EQUAL  reduce 23
+	NOT_EQUAL  reduce 23
+	LESS_EQUAL  reduce 23
+	GREATER_EQUAL  reduce 23
+	'='  reduce 23
+	'<'  reduce 23
+	'>'  reduce 23
+	'+'  reduce 23
+	'-'  reduce 23
+	']'  reduce 23
+	')'  reduce 23
+	';'  reduce 23
+	','  reduce 23
+
+
+state 125
+	expression : expression . '+' expression  (23)
+	expression : expression . '-' expression  (24)
+	expression : expression '-' expression .  (24)
+	expression : expression . '*' expression  (25)
+	expression : expression . '/' expression  (26)
+	expression : expression . '%' expression  (27)
+	expression : expression . '>' expression  (30)
+	expression : expression . '<' expression  (31)
+	expression : expression . LESS_EQUAL expression  (32)
+	expression : expression . GREATER_EQUAL expression  (33)
+	expression : expression . EQUAL expression  (34)
+	expression : expression . NOT_EQUAL expression  (35)
+	expression : expression . AND expression  (36)
+	expression : expression . OR expression  (37)
+	expression : expression . '.' ID  (41)
+	expression : expression . '[' expression ']'  (42)
+
+	'*'  shift 96
+	'/'  shift 97
+	'%'  shift 98
+	'['  shift 99
+	'.'  shift 100
+	AND  reduce 24
+	OR  reduce 24
+	EQUAL  reduce 24
+	NOT_EQUAL  reduce 24
+	LESS_EQUAL  reduce 24
+	GREATER_EQUAL  reduce 24
+	'='  reduce 24
+	'<'  reduce 24
+	'>'  reduce 24
+	'+'  reduce 24
+	'-'  reduce 24
+	']'  reduce 24
+	')'  reduce 24
+	';'  reduce 24
+	','  reduce 24
+
+
+state 126
+	expression : expression . '+' expression  (23)
+	expression : expression . '-' expression  (24)
+	expression : expression . '*' expression  (25)
+	expression : expression '*' expression .  (25)
+	expression : expression . '/' expression  (26)
+	expression : expression . '%' expression  (27)
+	expression : expression . '>' expression  (30)
+	expression : expression . '<' expression  (31)
+	expression : expression . LESS_EQUAL expression  (32)
+	expression : expression . GREATER_EQUAL expression  (33)
+	expression : expression . EQUAL expression  (34)
+	expression : expression . NOT_EQUAL expression  (35)
+	expression : expression . AND expression  (36)
+	expression : expression . OR expression  (37)
+	expression : expression . '.' ID  (41)
+	expression : expression . '[' expression ']'  (42)
+
+	'['  shift 99
+	'.'  shift 100
+	AND  reduce 25
+	OR  reduce 25
+	EQUAL  reduce 25
+	NOT_EQUAL  reduce 25
+	LESS_EQUAL  reduce 25
+	GREATER_EQUAL  reduce 25
+	'='  reduce 25
+	'<'  reduce 25
+	'>'  reduce 25
+	'+'  reduce 25
+	'-'  reduce 25
+	'*'  reduce 25
+	'/'  reduce 25
+	'%'  reduce 25
+	']'  reduce 25
+	')'  reduce 25
+	';'  reduce 25
+	','  reduce 25
+
+
+state 127
+	expression : expression . '+' expression  (23)
+	expression : expression . '-' expression  (24)
+	expression : expression . '*' expression  (25)
+	expression : expression . '/' expression  (26)
+	expression : expression '/' expression .  (26)
+	expression : expression . '%' expression  (27)
+	expression : expression . '>' expression  (30)
+	expression : expression . '<' expression  (31)
+	expression : expression . LESS_EQUAL expression  (32)
+	expression : expression . GREATER_EQUAL expression  (33)
+	expression : expression . EQUAL expression  (34)
+	expression : expression . NOT_EQUAL expression  (35)
+	expression : expression . AND expression  (36)
+	expression : expression . OR expression  (37)
+	expression : expression . '.' ID  (41)
+	expression : expression . '[' expression ']'  (42)
+
+	'['  shift 99
+	'.'  shift 100
+	AND  reduce 26
+	OR  reduce 26
+	EQUAL  reduce 26
+	NOT_EQUAL  reduce 26
+	LESS_EQUAL  reduce 26
+	GREATER_EQUAL  reduce 26
+	'='  reduce 26
+	'<'  reduce 26
+	'>'  reduce 26
+	'+'  reduce 26
+	'-'  reduce 26
+	'*'  reduce 26
+	'/'  reduce 26
+	'%'  reduce 26
+	']'  reduce 26
+	')'  reduce 26
+	';'  reduce 26
+	','  reduce 26
+
+
+state 128
+	expression : expression . '+' expression  (23)
+	expression : expression . '-' expression  (24)
+	expression : expression . '*' expression  (25)
+	expression : expression . '/' expression  (26)
+	expression : expression . '%' expression  (27)
+	expression : expression '%' expression .  (27)
+	expression : expression . '>' expression  (30)
+	expression : expression . '<' expression  (31)
+	expression : expression . LESS_EQUAL expression  (32)
+	expression : expression . GREATER_EQUAL expression  (33)
+	expression : expression . EQUAL expression  (34)
+	expression : expression . NOT_EQUAL expression  (35)
+	expression : expression . AND expression  (36)
+	expression : expression . OR expression  (37)
+	expression : expression . '.' ID  (41)
+	expression : expression . '[' expression ']'  (42)
+
+	'['  shift 99
+	'.'  shift 100
+	AND  reduce 27
+	OR  reduce 27
+	EQUAL  reduce 27
+	NOT_EQUAL  reduce 27
+	LESS_EQUAL  reduce 27
+	GREATER_EQUAL  reduce 27
+	'='  reduce 27
+	'<'  reduce 27
+	'>'  reduce 27
+	'+'  reduce 27
+	'-'  reduce 27
+	'*'  reduce 27
+	'/'  reduce 27
+	'%'  reduce 27
+	']'  reduce 27
+	')'  reduce 27
+	';'  reduce 27
+	','  reduce 27
+
+
+state 129
+	expression : expression . '+' expression  (23)
+	expression : expression . '-' expression  (24)
+	expression : expression . '*' expression  (25)
+	expression : expression . '/' expression  (26)
+	expression : expression . '%' expression  (27)
+	expression : expression . '>' expression  (30)
+	expression : expression . '<' expression  (31)
+	expression : expression . LESS_EQUAL expression  (32)
+	expression : expression . GREATER_EQUAL expression  (33)
+	expression : expression . EQUAL expression  (34)
+	expression : expression . NOT_EQUAL expression  (35)
+	expression : expression . AND expression  (36)
+	expression : expression . OR expression  (37)
+	expression : expression . '.' ID  (41)
+	expression : expression . '[' expression ']'  (42)
+	expression : expression '[' expression . ']'  (42)
+
+	AND  shift 85
+	OR  shift 86
+	EQUAL  shift 87
+	NOT_EQUAL  shift 88
+	LESS_EQUAL  shift 89
+	GREATER_EQUAL  shift 90
+	'<'  shift 92
+	'>'  shift 93
+	'+'  shift 94
+	'-'  shift 95
+	'*'  shift 96
+	'/'  shift 97
+	'%'  shift 98
+	'['  shift 99
+	']'  shift 141
+	'.'  shift 100
+	.  error
+
+
+state 130
+	expression : expression '.' ID .  (41)
+
+	.  reduce 41
+
+
+state 131
+	funDefinition : VOID ID '(' parameterOP ')' '{' varDefinitionOP statementOP '}' .  (6)
+
+	.  reduce 6
+
+
+state 132
+	funDefinition : type ID '(' parameterOP ')' '{' varDefinitionOP statementOP '}' .  (5)
+
+	.  reduce 5
+
+
+state 133
+	statement : WHILE '(' expression ')' . complexStatement  (15)
+
+	INT_CONSTANT  shift 51
+	CHAR_CONSTANT  shift 52
+	REAL_CONSTANT  shift 53
+	WHILE  shift 54
+	RETURN  shift 55
+	ID  shift 56
+	IF  shift 57
+	READ  shift 58
+	WRITE  shift 59
+	'-'  shift 60
+	'('  shift 61
+	'{'  shift 142
+	'!'  shift 62
+	.  error
+
+	statement  goto 143
+	expression  goto 66
+	complexStatement  goto 144
+	ifStatement  goto 67
+
+
+state 134
+	expression : ID '(' argumentOP . ')'  (38)
+
+	')'  shift 145
+	.  error
+
+
+state 135
+	statement : ID '(' argumentOP ')' . ';'  (14)
+	expression : ID '(' argumentOP ')' .  (38)
+
+	';'  shift 146
+	AND  reduce 38
+	OR  reduce 38
+	EQUAL  reduce 38
+	NOT_EQUAL  reduce 38
+	LESS_EQUAL  reduce 38
+	GREATER_EQUAL  reduce 38
+	'='  reduce 38
+	'<'  reduce 38
+	'>'  reduce 38
+	'+'  reduce 38
+	'-'  reduce 38
+	'*'  reduce 38
+	'/'  reduce 38
+	'%'  reduce 38
+	'['  reduce 38
+	'.'  reduce 38
+
+
+state 136
+	argumentS : argumentS ',' . expression  (58)
+
+	INT_CONSTANT  shift 51
+	CHAR_CONSTANT  shift 52
+	REAL_CONSTANT  shift 53
+	ID  shift 72
+	'-'  shift 60
+	'('  shift 61
+	'!'  shift 62
+	.  error
+
+	expression  goto 147
+
+
+state 137
+	ifStatement : IF '(' expression ')' . complexStatement else  (18)
+
+	INT_CONSTANT  shift 51
+	CHAR_CONSTANT  shift 52
+	REAL_CONSTANT  shift 53
+	WHILE  shift 54
+	RETURN  shift 55
+	ID  shift 56
+	IF  shift 57
+	READ  shift 58
+	WRITE  shift 59
+	'-'  shift 60
+	'('  shift 61
+	'{'  shift 142
+	'!'  shift 62
+	.  error
+
+	statement  goto 143
+	expression  goto 66
+	complexStatement  goto 148
+	ifStatement  goto 67
+
+
+state 138
+	expression : expression . '+' expression  (23)
+	expression : expression . '-' expression  (24)
+	expression : expression . '*' expression  (25)
+	expression : expression . '/' expression  (26)
+	expression : expression . '%' expression  (27)
+	expression : expression . '>' expression  (30)
+	expression : expression . '<' expression  (31)
+	expression : expression . LESS_EQUAL expression  (32)
+	expression : expression . GREATER_EQUAL expression  (33)
+	expression : expression . EQUAL expression  (34)
+	expression : expression . NOT_EQUAL expression  (35)
+	expression : expression . AND expression  (36)
+	expression : expression . OR expression  (37)
+	expression : expression . '.' ID  (41)
+	expression : expression . '[' expression ']'  (42)
+	expressionS : expressionS ',' expression .  (47)
+
+	AND  shift 85
+	OR  shift 86
+	EQUAL  shift 87
+	NOT_EQUAL  shift 88
+	LESS_EQUAL  shift 89
+	GREATER_EQUAL  shift 90
+	'<'  shift 92
+	'>'  shift 93
+	'+'  shift 94
+	'-'  shift 95
+	'*'  shift 96
+	'/'  shift 97
+	'%'  shift 98
+	'['  shift 99
+	'.'  shift 100
+	';'  reduce 47
+	','  reduce 47
+
+
+state 139
+	expression : expression . '+' expression  (23)
+	expression : expression . '-' expression  (24)
+	expression : expression . '*' expression  (25)
+	expression : expression . '/' expression  (26)
+	expression : expression . '%' expression  (27)
+	expression : expression . '>' expression  (30)
+	expression : expression . '<' expression  (31)
+	expression : expression . LESS_EQUAL expression  (32)
+	expression : expression . GREATER_EQUAL expression  (33)
+	expression : expression . EQUAL expression  (34)
+	expression : expression . NOT_EQUAL expression  (35)
+	expression : expression . AND expression  (36)
+	expression : expression . OR expression  (37)
+	expression : '(' type ')' expression .  (40)
+	expression : expression . '.' ID  (41)
+	expression : expression . '[' expression ']'  (42)
+
+	'['  shift 99
+	'.'  shift 100
+	AND  reduce 40
+	OR  reduce 40
+	EQUAL  reduce 40
+	NOT_EQUAL  reduce 40
+	LESS_EQUAL  reduce 40
+	GREATER_EQUAL  reduce 40
+	'='  reduce 40
+	'<'  reduce 40
+	'>'  reduce 40
+	'+'  reduce 40
+	'-'  reduce 40
+	'*'  reduce 40
+	'/'  reduce 40
+	'%'  reduce 40
+	']'  reduce 40
+	')'  reduce 40
+	';'  reduce 40
+	','  reduce 40
+
+
+state 140
+	statement : expression '=' expression ';' .  (13)
+
+	.  reduce 13
+
+
+state 141
+	expression : expression '[' expression ']' .  (42)
+
+	.  reduce 42
+
+
+state 142
+	complexStatement : '{' . statementOP '}'  (21)
+	statementOP : .  (8)
+
+	INT_CONSTANT  shift 51
+	CHAR_CONSTANT  shift 52
+	REAL_CONSTANT  shift 53
+	WHILE  shift 54
+	RETURN  shift 55
+	ID  shift 56
+	IF  shift 57
+	READ  shift 58
+	WRITE  shift 59
+	'-'  shift 60
+	'('  shift 61
+	'!'  shift 62
+	'}'  reduce 8
+
+	statementOP  goto 149
+	statementS  goto 64
+	statement  goto 65
+	expression  goto 66
+	ifStatement  goto 67
+
+
+state 143
+	complexStatement : statement .  (22)
+
+	.  reduce 22
+
+
+state 144
+	statement : WHILE '(' expression ')' complexStatement .  (15)
+
+	.  reduce 15
+
+
+state 145
+	expression : ID '(' argumentOP ')' .  (38)
+
+	.  reduce 38
+
+
+state 146
+	statement : ID '(' argumentOP ')' ';' .  (14)
+
+	.  reduce 14
+
+
+state 147
+	expression : expression . '+' expression  (23)
+	expression : expression . '-' expression  (24)
+	expression : expression . '*' expression  (25)
+	expression : expression . '/' expression  (26)
+	expression : expression . '%' expression  (27)
+	expression : expression . '>' expression  (30)
+	expression : expression . '<' expression  (31)
+	expression : expression . LESS_EQUAL expression  (32)
+	expression : expression . GREATER_EQUAL expression  (33)
+	expression : expression . EQUAL expression  (34)
+	expression : expression . NOT_EQUAL expression  (35)
+	expression : expression . AND expression  (36)
+	expression : expression . OR expression  (37)
+	expression : expression . '.' ID  (41)
+	expression : expression . '[' expression ']'  (42)
+	argumentS : argumentS ',' expression .  (58)
+
+	AND  shift 85
+	OR  shift 86
+	EQUAL  shift 87
+	NOT_EQUAL  shift 88
+	LESS_EQUAL  shift 89
+	GREATER_EQUAL  shift 90
+	'<'  shift 92
+	'>'  shift 93
+	'+'  shift 94
+	'-'  shift 95
+	'*'  shift 96
+	'/'  shift 97
+	'%'  shift 98
+	'['  shift 99
+	'.'  shift 100
+	')'  reduce 58
+	','  reduce 58
+
+
+state 148
+	ifStatement : IF '(' expression ')' complexStatement . else  (18)
+	else : .  (20)
+
+	ELSE  shift 150
+	INT_CONSTANT  reduce 20
+	CHAR_CONSTANT  reduce 20
+	REAL_CONSTANT  reduce 20
+	WHILE  reduce 20
+	RETURN  reduce 20
+	ID  reduce 20
+	IF  reduce 20
+	READ  reduce 20
+	WRITE  reduce 20
+	'-'  reduce 20
+	'('  reduce 20
+	'}'  reduce 20
+	'!'  reduce 20
+
+	else  goto 151
+
+
+state 149
+	complexStatement : '{' statementOP . '}'  (21)
+
+	'}'  shift 152
+	.  error
+
+
+state 150
+	else : ELSE . complexStatement  (19)
+
+	INT_CONSTANT  shift 51
+	CHAR_CONSTANT  shift 52
+	REAL_CONSTANT  shift 53
+	WHILE  shift 54
+	RETURN  shift 55
+	ID  shift 56
+	IF  shift 57
+	READ  shift 58
+	WRITE  shift 59
+	'-'  shift 60
+	'('  shift 61
+	'{'  shift 142
+	'!'  shift 62
+	.  error
+
+	statement  goto 143
+	expression  goto 66
+	complexStatement  goto 153
+	ifStatement  goto 67
+
+
+state 151
+	ifStatement : IF '(' expression ')' complexStatement else .  (18)
+
+	.  reduce 18
+
+
+state 152
+	complexStatement : '{' statementOP '}' .  (21)
+
+	.  reduce 21
+
+
+state 153
+	else : ELSE complexStatement .  (19)
+
+	.  reduce 19
+
+
+Rules never reduced:
+	expressionOP : expressionS  (49)
+	expressionOP :  (50)
+
+
+46 terminals, 25 nonterminals
+75 grammar rules, 154 states
